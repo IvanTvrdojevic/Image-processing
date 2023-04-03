@@ -28,7 +28,7 @@ def gammaTransformation(a, y, mat):
             mat[i, j] = num if num < 256 else 255
             
 
-    print("after gamma transformation with y {} and a {}".format(y, a))
+    print("After gamma transformation with y {} and a {}".format(y, a))
     print(mat)
     print("Lmax {}, Lmin {}, Lmean {}".format(mat.max(), mat.min(), int(mat.mean())))
     drawHistogram(mat)
@@ -40,11 +40,57 @@ def logTransformation(mat):
             #print(type(matrix[i, j]))
             mat[i, j] = math.log10(mat[i, j] + 1)
 
-    print("after log transformation")
+    print("After log transformation")
     print(mat)
     print("Lmax {}, Lmin {}, Lmean {}".format(mat.max(), mat.min(), int(mat.mean())))
     drawHistogram(mat)
     print("--------------------------------------------------------------------------", "\n")   
+
+def filter(mat, mask):
+    resMat = mat.copy()
+    res = 0
+    for i in range (4):
+        k = 0 if i > 0 else 1
+        tmpK = k
+        aStart = i - 1 if i > 0 else 0
+        aEnd = i + 1 if i < 3 else aStart + 1
+        print("as", aStart)
+        print("ae", aEnd)
+        for j in range (4):
+            m = 0 if j > 0 else 1 
+            tmpM = m
+            bStart = j - 1 if j > 0 else 0
+            bEnd = j + 1 if j < 3 else bStart + 1
+            print("bs", bStart)
+            print("be", bEnd)
+            for a in range (aStart, aEnd + 1):
+                for b in range (bStart, bEnd + 1):
+                    print(".......................................................", aStart, " ", bStart, " ")
+                    print("mat", mat[a, b])
+                    print("mask", mask[k, m])
+                    print("k", k)
+                    print("m", m)
+                    res += mat[aStart, bStart] * mask[k, m]
+                    print("res", res)
+                    m += 1
+                m = tmpM
+                k += 1
+            print("end of one filtration\n\n\n")
+            k = tmpK
+            resMat[i, j] = res             
+            res = 0
+    print("After run-lenght filtering")
+    print(resMat)
+    print("--------------------------------------------------------------------------", "\n")   
+    
+
+
+
+def getGaussMask():
+    pass
+
+
+
 #--------------------------------------------------------------------------------------------------------------------------
 
 ###########################################################################################################################
@@ -76,6 +122,11 @@ def main():
     gammaTransformation(1, 0.7, matrix.copy())
     gammaTransformation(1, 1.8, matrix.copy())
     gammaTransformation(5, 0.7, matrix.copy())
+
+    runLenMask = numpy.full((3, 3), 1/9, dtype = float)
+
+    filter(matrix.copy(), runLenMask)
+
 #--------------------------------------------------------------------------------------------------------------------------
 
 if __name__ == '__main__':
