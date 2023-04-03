@@ -46,41 +46,26 @@ def logTransformation(mat):
     drawHistogram(mat)
     print("--------------------------------------------------------------------------", "\n")   
 
-def filter(mat, mask):
+def filter(mat, mask, filterType):
     resMat = mat.copy()
-    res = 0
     for i in range (4):
-        k = 0 if i > 0 else 1
-        tmpK = k
         aStart = i - 1 if i > 0 else 0
-        aEnd = i + 1 if i < 3 else aStart + 1
-        print("as", aStart)
-        print("ae", aEnd)
+        aEnd = i + 1 if i < 3 else aStart + 2
         for j in range (4):
-            m = 0 if j > 0 else 1 
-            tmpM = m
             bStart = j - 1 if j > 0 else 0
-            bEnd = j + 1 if j < 3 else bStart + 1
-            print("bs", bStart)
-            print("be", bEnd)
-            for a in range (aStart, aEnd + 1):
-                for b in range (bStart, bEnd + 1):
-                    print(".......................................................", aStart, " ", bStart, " ")
-                    print("mat", mat[a, b])
-                    print("mask", mask[k, m])
-                    print("k", k)
-                    print("m", m)
-                    res += mat[aStart, bStart] * mask[k, m]
-                    print("res", res)
-                    m += 1
-                m = tmpM
-                k += 1
-            print("end of one filtration\n\n\n")
-            k = tmpK
-            resMat[i, j] = res             
+            bEnd = j + 1 if j < 3 else bStart + 2
             res = 0
-    print("After run-lenght filtering")
+            k = 0 if i > 0 else 1
+            for a in range (aStart, aEnd):
+                m = 0 if j > 0 else 1 
+                for b in range (bStart, bEnd):
+                    res += mat[a, b] * mask[k, m]
+                    m += 1
+                k += 1
+            resMat[i, j] = res             
+    print("After {} filtering".format(filterType))
     print(resMat)
+    print("Lmax {}, Lmin {}, Lmean {}".format(resMat.max(), resMat.min(), int(resMat.mean())))
     print("--------------------------------------------------------------------------", "\n")   
     
 
@@ -125,7 +110,7 @@ def main():
 
     runLenMask = numpy.full((3, 3), 1/9, dtype = float)
 
-    filter(matrix.copy(), runLenMask)
+    filter(matrix.copy(), runLenMask, "run-len")
 
 #--------------------------------------------------------------------------------------------------------------------------
 
