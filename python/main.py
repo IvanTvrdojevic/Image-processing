@@ -70,7 +70,7 @@ def filter(mat, mask):
                     print("mask", mask[k, m])
                     print("k", k)
                     print("m", m)
-                    res += mat[aStart, bStart] * mask[k, m]
+                    res += mat[a, b] * mask[k, m]
                     print("res", res)
                     m += 1
                 m = tmpM
