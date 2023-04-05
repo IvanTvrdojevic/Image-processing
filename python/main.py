@@ -46,6 +46,7 @@ def logTransformation(mat):
     drawHistogram(mat)
     print("--------------------------------------------------------------------------", "\n")   
 
+<<<<<<< HEAD
 def filter(mat, mask, filterType):
     resMat = mat.copy()
     for i in range (4):
@@ -59,23 +60,55 @@ def filter(mat, mask, filterType):
             for a in range (aStart, aEnd):
                 m = 0 if j > 0 else 1 
                 for b in range (bStart, bEnd):
+=======
+def getGaussMask(x):
+    arr = numpy.array([-1, 0, 1])
+    gMat = numpy.array([])
+    sum = 0
+    for i in arr:
+        for j in arr:
+            res = pow(math.e, (-(i*i - j*j)/2*x*x))
+            gMat = numpy.append(gMat, res)
+            sum += res
+
+    gMat = gMat.reshape(3,3)
+    mask = gMat.copy()
+
+    for i in range(3):
+        for j in range(3):
+            mask[i, j] = gMat[i, j] / sum
+
+    return mask
+
+def applyFilter(mat, mask, filterType, description = ""):
+    resMat = mat.copy()
+    for i in range (4):
+        aStart = i - 1 if i > 0 else 0
+        aEnd = i + 1 if i < 3 else aStart + 1
+        for j in range (4):
+            bStart = j - 1 if j > 0 else 0
+            bEnd = j + 1 if j < 3 else bStart + 1
+            k = 0 if i > 0 else 1
+            res = 0
+            for a in range (aStart, aEnd + 1):
+                m = 0 if j > 0 else 1 
+                for b in range (bStart, bEnd + 1):
+>>>>>>> tmp
                     res += mat[a, b] * mask[k, m]
                     m += 1
                 k += 1
             resMat[i, j] = res             
+<<<<<<< HEAD
     print("After {} filtering".format(filterType))
     print(resMat)
     print("Lmax {}, Lmin {}, Lmean {}".format(resMat.max(), resMat.min(), int(resMat.mean())))
+=======
+    print("After {} filtering {}".format(filterType, description))
+    print(resMat)
+    print("Lmax {}, Lmin {}, Lmean {}".format(resMat.max(), resMat.min(), int(resMat.mean())))
+    drawHistogram(resMat)
+>>>>>>> tmp
     print("--------------------------------------------------------------------------", "\n")   
-    
-
-
-
-def getGaussMask():
-    pass
-
-
-
 #--------------------------------------------------------------------------------------------------------------------------
 
 ###########################################################################################################################
@@ -108,9 +141,21 @@ def main():
     gammaTransformation(1, 1.8, matrix.copy())
     gammaTransformation(5, 0.7, matrix.copy())
 
+    # Run-len filterin
     runLenMask = numpy.full((3, 3), 1/9, dtype = float)
+    applyFilter(matrix.copy(), runLenMask, "run-len")
 
+<<<<<<< HEAD
     filter(matrix.copy(), runLenMask, "run-len")
+=======
+    # Gauss filtering 
+    gaussMask = getGaussMask(1)
+    applyFilter(matrix.copy(), gaussMask, "Gauss", ", with q = 1") 
+    gaussMask = getGaussMask(3)
+    applyFilter(matrix.copy(), gaussMask, "Gauss", ", with q = 3") 
+
+ 
+>>>>>>> tmp
 
 #--------------------------------------------------------------------------------------------------------------------------
 
