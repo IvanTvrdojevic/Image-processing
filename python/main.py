@@ -46,21 +46,6 @@ def logTransformation(mat):
     drawHistogram(mat)
     print("--------------------------------------------------------------------------", "\n")   
 
-<<<<<<< HEAD
-def filter(mat, mask, filterType):
-    resMat = mat.copy()
-    for i in range (4):
-        aStart = i - 1 if i > 0 else 0
-        aEnd = i + 1 if i < 3 else aStart + 2
-        for j in range (4):
-            bStart = j - 1 if j > 0 else 0
-            bEnd = j + 1 if j < 3 else bStart + 2
-            res = 0
-            k = 0 if i > 0 else 1
-            for a in range (aStart, aEnd):
-                m = 0 if j > 0 else 1 
-                for b in range (bStart, bEnd):
-=======
 def getGaussMask(x):
     arr = numpy.array([-1, 0, 1])
     gMat = numpy.array([])
@@ -93,21 +78,14 @@ def applyFilter(mat, mask, filterType, description = ""):
             for a in range (aStart, aEnd + 1):
                 m = 0 if j > 0 else 1 
                 for b in range (bStart, bEnd + 1):
->>>>>>> tmp
                     res += mat[a, b] * mask[k, m]
                     m += 1
                 k += 1
             resMat[i, j] = res             
-<<<<<<< HEAD
-    print("After {} filtering".format(filterType))
-    print(resMat)
-    print("Lmax {}, Lmin {}, Lmean {}".format(resMat.max(), resMat.min(), int(resMat.mean())))
-=======
     print("After {} filtering {}".format(filterType, description))
     print(resMat)
     print("Lmax {}, Lmin {}, Lmean {}".format(resMat.max(), resMat.min(), int(resMat.mean())))
     drawHistogram(resMat)
->>>>>>> tmp
     print("--------------------------------------------------------------------------", "\n")   
 #--------------------------------------------------------------------------------------------------------------------------
 
@@ -145,18 +123,11 @@ def main():
     runLenMask = numpy.full((3, 3), 1/9, dtype = float)
     applyFilter(matrix.copy(), runLenMask, "run-len")
 
-<<<<<<< HEAD
-    filter(matrix.copy(), runLenMask, "run-len")
-=======
-    # Gauss filtering 
+   # Gauss filtering 
     gaussMask = getGaussMask(1)
     applyFilter(matrix.copy(), gaussMask, "Gauss", ", with q = 1") 
     gaussMask = getGaussMask(3)
     applyFilter(matrix.copy(), gaussMask, "Gauss", ", with q = 3") 
-
- 
->>>>>>> tmp
-
 #--------------------------------------------------------------------------------------------------------------------------
 
 if __name__ == '__main__':
